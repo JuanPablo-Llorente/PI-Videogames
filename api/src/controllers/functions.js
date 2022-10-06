@@ -16,37 +16,37 @@ async function getVideogames()
         // Hacer una vez para cargar los datos y comentar porque se duplican
         // Primero tengo que agregar los generos a la base de datos
         
-        // for(let i = 1; i <= 15; i++)
-        // {
-        //     (await axios(`${URL}&page=${i}`)).data.results.map(async e => {
-        //         // Agrego las descripciones
+        for(let i = 1; i <= 15; i++)
+        {
+            (await axios(`${URL}&page=${i}`)).data.results.map(async e => {
+                // Agrego las descripciones
                 
-        //         const descriptionSearch = await getById(e.id);
-        //         const genres = e.genres.map(g => g.name);
-        //         // Cargar a la base de datos
+                const descriptionSearch = await getById(e.id);
+                const genres = e.genres.map(g => g.name);
+                // Cargar a la base de datos
                 
-        //         const newVideogame = await Videogame.create({
-        //             name: e.name,
-        //             description: descriptionSearch ? descriptionSearch : null,
-        //             releaseDate: e.released ? e.released : null,
-        //             rating: e.rating ? e.rating : null,
-        //             platforms: e.platforms ? e.platforms.map(p => p.platform.name) : null,
-        //             image: e.background_image ? e.background_image : null,
-        //             createdInDb: false,
-        //         });
-        //         // Vinculo los generos ingresados con los de la base de datos
+                const newVideogame = await Videogame.create({
+                    name: e.name,
+                    description: descriptionSearch ? descriptionSearch : null,
+                    releaseDate: e.released ? e.released : null,
+                    rating: e.rating ? e.rating : null,
+                    platforms: e.platforms ? e.platforms.map(p => p.platform.name) : null,
+                    image: e.background_image ? e.background_image : null,
+                    createdInDb: false,
+                });
+                // Vinculo los generos ingresados con los de la base de datos
                 
-        //         genres.forEach(async e => {
-        //             const genresDb = await Genre.findAll({
-        //                 where:
-        //                 {
-        //                     name: e,
-        //                 },
-        //             });
-        //             newVideogame.addGenres(genresDb);
-        //         });
-        //     });
-        // };
+                genres.forEach(async e => {
+                    const genresDb = await Genre.findAll({
+                        where:
+                        {
+                            name: e,
+                        },
+                    });
+                    newVideogame.addGenres(genresDb);
+                });
+            });
+        };
         
         // -------------------------------------------------------------------------------------------------
         
@@ -108,10 +108,10 @@ async function getById(id)
     {
         // Comento para no consumir la api
         
-        // const data = (await axios(idURL)).data;
-        // const apiSearch = data.description_raw;
+        const data = (await axios(idURL)).data;
+        const apiSearch = data.description_raw;
         
-        // return apiSearch;
+        return apiSearch;
     }
     catch(error)
     {
@@ -128,12 +128,12 @@ async function getGenres()
     {
         // Comento para no consumir la api
         
-        // const apiGenres = (await axios(genreURL)).data.results.map(e => e.name);
+        const apiGenres = (await axios(genreURL)).data.results.map(e => e.name);
         
-        // // Cargar a la base de datos
-        // apiGenres.forEach(async e => {
-        //     await Genre.findOrCreate({where: {name: e}});
-        // });
+        // Cargar a la base de datos
+        apiGenres.forEach(async e => {
+            await Genre.findOrCreate({where: {name: e}});
+        });
         
         // -------------------------------------------------------------------------------------------------
         
@@ -159,28 +159,28 @@ async function getPlatforms()
     {
         // Comento para no consumir la api
         
-        // const apiAllPlatforms = (await axios(URL)).data.results.map(e => e.platforms.map(p => p.platform.name));
-        // const allPlatforms = [];
-        // const unsortedPlatforms = [];
+        const apiAllPlatforms = (await axios(URL)).data.results.map(e => e.platforms.map(p => p.platform.name));
+        const allPlatforms = [];
+        const unsortedPlatforms = [];
         
-        // // Unificar arrays
-        // apiAllPlatforms.forEach(e => e.forEach(p => allPlatforms.push(p)));
+        // Unificar arrays
+        apiAllPlatforms.forEach(e => e.forEach(p => allPlatforms.push(p)));
         
-        // // Eliminar repetidos
-        // for (let i = 0; i < allPlatforms.length; i++)
-        // {
-        //     const platform = allPlatforms[i];
+        // Eliminar repetidos
+        for (let i = 0; i < allPlatforms.length; i++)
+        {
+            const platform = allPlatforms[i];
             
-        //     if(!unsortedPlatforms.includes(platform))
-        //     {
-        //         unsortedPlatforms.push(platform);
-        //     };
-        // };
+            if(!unsortedPlatforms.includes(platform))
+            {
+                unsortedPlatforms.push(platform);
+            };
+        };
         
-        // // Cargar a la base de datos
-        // unsortedPlatforms.forEach(async e => {
-        //     await Platform.findOrCreate({where: {name: e}});
-        // });
+        // Cargar a la base de datos
+        unsortedPlatforms.forEach(async e => {
+            await Platform.findOrCreate({where: {name: e}});
+        });
         
         // -------------------------------------------------------------------------------------------------
         
